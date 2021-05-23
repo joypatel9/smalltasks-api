@@ -1,0 +1,15 @@
+# Spring related properties
+spring:
+
+  # Active profile
+  profiles.active: local
+
+  # JSON serialization settings
+  jackson:
+    default-property-inclusion: NON_NULL
+
+    serialization:
+      write-null-map-values: false
+
+    deserialization:
+      accept-single-value-as-array: true

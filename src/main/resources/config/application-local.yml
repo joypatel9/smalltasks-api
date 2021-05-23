@@ -1,0 +1,11 @@
+spring:
+  jpa.hibernate.ddl-auto: update
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/smalltasks-db
+    username: smalltasks
+    password: smalltasks
