@@ -2,7 +2,7 @@ package com.joypatel.smalltasks.user.controllers;
 
 import com.joypatel.smalltasks.user.dtos.RegisterForm;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
-import com.joypatel.smalltasks.user.services.UserService;
+import com.joypatel.smalltasks.user.services.UserRegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserRegistrationService userRegistrationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse register(@RequestBody RegisterForm form) {
-        return userService.register(form);
+        return userRegistrationService.register(form);
     }
 
 }

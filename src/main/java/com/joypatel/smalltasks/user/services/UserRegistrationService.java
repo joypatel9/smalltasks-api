@@ -1,7 +1,6 @@
 package com.joypatel.smalltasks.user.services;
 
 import com.joypatel.smalltasks.common.MyUtils;
-import com.joypatel.smalltasks.common.domain.AbstractResponse;
 import com.joypatel.smalltasks.user.dtos.RegisterForm;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
 import com.joypatel.smalltasks.user.entities.User;
@@ -17,9 +16,10 @@ import javax.validation.Valid;
 @Validated
 @AllArgsConstructor
 @Slf4j
-public class UserService {
+public class UserRegistrationService {
 
     private final UserRepository userRepository;
+    private final UserHelper userHelper;
     private final PasswordEncoder passwordEncoder;
     private final MyUtils utils;
 
@@ -30,7 +30,7 @@ public class UserService {
         User user = toUser(form);
         userRepository.save(user);
 
-        UserResponse response =  toResponse(user);
+        UserResponse response = userHelper.toResponse(user);
         log.info("Registered user {}", response);
         return response;
     }
@@ -44,14 +44,5 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(form.getPassword()));
 
         return user;
-    }
-
-    private UserResponse toResponse(User user) {
-
-        return UserResponse.builder()
-                .ref(user.getRef())
-                .mobile(user.getMobile())
-                .name(user.getName())
-                .build();
     }
 }
