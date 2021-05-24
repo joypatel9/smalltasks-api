@@ -1,5 +1,8 @@
 package com.joypatel.smalltasks.user.dtos;
 
+import com.joypatel.smalltasks.common.validation.ValidMobile;
+import com.joypatel.smalltasks.common.validation.ValidName;
+import com.joypatel.smalltasks.common.validation.ValidPassword;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,16 +16,12 @@ import javax.validation.constraints.Size;
 @ToString(exclude = "password")
 public class RegisterForm {
 
-    @NotNull
-    @Size(min = 10, max = 10, message="{exactSize}")
-    @Pattern(regexp = "^[0-9]+$")
+    @ValidMobile
     private String mobile;
 
-    @NotNull
-    @Size(min = 1, max = 100)
+    @ValidName
     private String name;
 
-    @NotNull
-    @Size(min = 8, max = 32)
+    @ValidPassword
     private String password;
 }
