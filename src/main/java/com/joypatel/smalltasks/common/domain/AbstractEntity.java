@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+import static com.joypatel.smalltasks.common.MyUtils.UUID_LEN;
+
 @MappedSuperclass
 @Getter
 @Setter
@@ -20,7 +22,7 @@ public abstract class AbstractEntity<ID extends Serializable> {
     @GeneratedValue
     private ID id;
 
-    @Column(nullable = false, length=36, unique = true)
+    @Column(nullable = false, length=UUID_LEN, unique = true)
     private String ref;
 
     @CreatedBy

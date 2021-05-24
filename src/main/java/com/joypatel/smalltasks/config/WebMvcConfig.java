@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${web.url}")
+    @Value("${web.url:http://localhost:9000}")
     private String webUrl;
 
     @Override
