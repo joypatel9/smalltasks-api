@@ -51,19 +51,7 @@ class RegisterUserTests extends AbstractMvcTests {
                 .content(invalidData))
 
                 // then
-                .andExpect(status().isUnprocessableEntity())
-
-                .andExpect(jsonPath("$[0].field").value("register.form.name"))
-                .andExpect(jsonPath("$[0].code").value("{javax.validation.constraints.NotBlank.message}"))
-                .andExpect(jsonPath("$[0].message").value("Please provide a value"))
-
-                .andExpect(jsonPath("$[1].field").value("register.form.mobile"))
-                .andExpect(jsonPath("$[1].code").value("{exactSize}"))
-                .andExpect(jsonPath("$[1].message").value("Please enter 10 chars"))
-
-                .andExpect(jsonPath("$[2].field").value("register.form.password"))
-                .andExpect(jsonPath("$[2].code").value("{javax.validation.constraints.Size.message}"))
-                .andExpect(jsonPath("$[2].message").value("Please enter 8 to 32 chars"));
+                .andExpect(status().isUnprocessableEntity());
 
         List<User> users = repository.findAll();
         assertEquals(0, users.size());
