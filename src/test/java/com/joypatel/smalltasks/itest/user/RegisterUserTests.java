@@ -31,8 +31,42 @@ class RegisterUserTests extends AbstractMvcTests {
     private String registerUserPayload;
 
     @Value("classpath:itest/user/register-user.json")
-    public void setResource(Resource resource) throws IOException {
+    public void setRegisterUserPayload(Resource resource) throws IOException {
         registerUserPayload = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    private String invalidData;
+
+    @Value("classpath:itest/user/register-user-invalid-data.json")
+    public void setInvalidData(Resource resource) throws IOException {
+        invalidData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+    }
+
+    @Test
+    void testRegisterUser_When_InvalidData() throws Exception {
+
+        // when
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidData))
+
+                // then
+                .andExpect(status().isUnprocessableEntity())
+
+                .andExpect(jsonPath("$[0].field").value("register.form.name"))
+                .andExpect(jsonPath("$[0].code").value("{javax.validation.constraints.NotBlank.message}"))
+                .andExpect(jsonPath("$[0].message").value("Please provide a value"))
+
+                .andExpect(jsonPath("$[1].field").value("register.form.mobile"))
+                .andExpect(jsonPath("$[1].code").value("{exactSize}"))
+                .andExpect(jsonPath("$[1].message").value("Please enter 10 chars"))
+
+                .andExpect(jsonPath("$[2].field").value("register.form.password"))
+                .andExpect(jsonPath("$[2].code").value("{javax.validation.constraints.Size.message}"))
+                .andExpect(jsonPath("$[2].message").value("Please enter 8 to 32 chars"));
+
+        List<User> users = repository.findAll();
+        assertEquals(0, users.size());
     }
 
     @Test
@@ -48,7 +82,7 @@ class RegisterUserTests extends AbstractMvcTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(registerUserPayload))
 
-                //then
+                // then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("ref").isString())
                 .andExpect(jsonPath("name").value(name))
@@ -64,5 +98,6 @@ class RegisterUserTests extends AbstractMvcTests {
         assertEquals(name, user.getName());
         assertTrue(passwordEncoder.matches(password, user.getPassword()));
     }
+
 
 }
