@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class RegisterForm {
 
     @NotNull
-    @Size(min = 10, max = 10)
+    @Size(min = 10, max = 10, message="{exactSize}")
     @Pattern(regexp = "^[0-9]+$")
     private String mobile;
 

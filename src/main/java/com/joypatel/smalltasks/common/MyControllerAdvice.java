@@ -10,6 +10,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
@@ -45,24 +46,22 @@ public class MyControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Error>> handleException(MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public Set<Error> handleException(MethodArgumentNotValidException ex) {
 
-        Set<Error> errors = ex.getAllErrors().stream()
+        return ex.getAllErrors().stream()
                 .map(Error::of)
                 .collect(Collectors.toSet());
-
-        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Error>> handleException(ConstraintViolationException ex) {
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public Set<Error> handleException(ConstraintViolationException ex) {
 
-        Set<Error> errors = ex.getConstraintViolations().stream()
+        return ex.getConstraintViolations().stream()
                 .map(Error::of)
                 .collect(Collectors.toSet());
-
-        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }
