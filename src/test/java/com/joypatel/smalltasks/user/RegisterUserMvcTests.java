@@ -1,6 +1,6 @@
-package com.joypatel.smalltasks.itest.user;
+package com.joypatel.smalltasks.user;
 
-import com.joypatel.smalltasks.itest.AbstractMvcTests;
+import com.joypatel.smalltasks.AbstractMvcTests;
 import com.joypatel.smalltasks.user.entities.User;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,22 +23,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class RegisterUserMvcTests extends AbstractMvcTests {
 
+    private final String name = "Joy Patel";
+    private final String mobile = "9078921543";
+    private final String password = "password";
+
     @Autowired
     private TestUserRepository repository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private String registerUserPayload;
+    private String registerUserData;
 
-    @Value("classpath:itest/user/register-user.json")
-    public void setRegisterUserPayload(Resource resource) throws IOException {
-        registerUserPayload = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+    @Value("classpath:itest/user/payload/register-user.json")
+    public void setRegisterUserData(Resource resource) throws IOException {
+        registerUserData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
 
     private String invalidData;
 
-    @Value("classpath:itest/user/register-user-invalid-data.json")
+    @Value("classpath:itest/user/payload/register-user-invalid-data.json")
     public void setInvalidData(Resource resource) throws IOException {
         invalidData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
@@ -60,15 +65,10 @@ class RegisterUserMvcTests extends AbstractMvcTests {
     @Test
     void registerUser() throws Exception {
 
-        // given
-        var name = "Joy Patel";
-        var mobile = "9999999999";
-        var password = "password";
-
         // when
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(registerUserPayload))
+                .content(registerUserData))
 
                 // then
                 .andExpect(status().isCreated())
@@ -87,5 +87,21 @@ class RegisterUserMvcTests extends AbstractMvcTests {
         assertTrue(passwordEncoder.matches(password, user.getPassword()));
     }
 
+    @Test
+    @Sql("classpath:itest/user/sql/user.sql")
+    void registerUser_When_MobileAlreadyUsed() throws Exception {
+
+        // when
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(registerUserData))
+
+                // then
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$[0].field").value("mobile"))
+                .andExpect(jsonPath("$[0].code").value("{mobileNotUnique}"))
+                .andExpect(jsonPath("$[0].message").exists());
+
+    }
 
 }

@@ -1,15 +1,12 @@
 package com.joypatel.smalltasks.user.dtos;
 
-import com.joypatel.smalltasks.common.validation.ValidMobile;
-import com.joypatel.smalltasks.common.validation.ValidName;
-import com.joypatel.smalltasks.common.validation.ValidPassword;
+import com.joypatel.smalltasks.user.validation.UniqueMobile;
+import com.joypatel.smalltasks.user.validation.ValidMobile;
+import com.joypatel.smalltasks.user.validation.ValidName;
+import com.joypatel.smalltasks.user.validation.ValidPassword;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -17,6 +14,7 @@ import javax.validation.constraints.Size;
 public class RegisterForm {
 
     @ValidMobile
+    @UniqueMobile
     private String mobile;
 
     @ValidName

@@ -1,4 +1,4 @@
-package com.joypatel.smalltasks.itest.user;
+package com.joypatel.smalltasks.user;
 
 import com.joypatel.smalltasks.user.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

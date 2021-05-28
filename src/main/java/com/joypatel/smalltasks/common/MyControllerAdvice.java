@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,7 +37,7 @@ public class MyControllerAdvice {
 
         public static Error of(ConstraintViolation<?> error) {
             return new Error(
-                    error.getPropertyPath().toString(),
+                    error.getPropertyPath().toString().split("\\.")[2],
                     error.getMessageTemplate(),
                     error.getMessage());
         }
