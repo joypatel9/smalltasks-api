@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class RegisterUserTests extends AbstractMvcTests {
+class RegisterUserMvcTests extends AbstractMvcTests {
 
     @Autowired
     private TestUserRepository repository;
@@ -43,7 +43,7 @@ class RegisterUserTests extends AbstractMvcTests {
     }
 
     @Test
-    void testRegisterUser_When_InvalidData() throws Exception {
+    void registerUser_When_InvalidData() throws Exception {
 
         // when
         mockMvc.perform(post("/users")
@@ -58,7 +58,7 @@ class RegisterUserTests extends AbstractMvcTests {
     }
 
     @Test
-    void testRegisterUser() throws Exception {
+    void registerUser() throws Exception {
 
         // given
         var name = "Joy Patel";
