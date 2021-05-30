@@ -57,7 +57,6 @@ public class MyControllerAdvice {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public Set<Error> handleException(ConstraintViolationException ex) {
-
         return ex.getConstraintViolations().stream()
                 .map(Error::of)
                 .collect(Collectors.toSet());

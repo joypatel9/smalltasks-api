@@ -19,6 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         log.info("Configuring HttpSecurity");
         http
+                .formLogin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .logout().disable()
                 .csrf().disable()

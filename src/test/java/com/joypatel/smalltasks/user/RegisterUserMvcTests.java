@@ -101,7 +101,5 @@ class RegisterUserMvcTests extends AbstractMvcTests {
                 .andExpect(jsonPath("$[0].field").value("mobile"))
                 .andExpect(jsonPath("$[0].code").value("{mobileNotUnique}"))
                 .andExpect(jsonPath("$[0].message").exists());
-
     }
-
 }
