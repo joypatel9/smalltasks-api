@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 class UserRegistrationServiceTests {
 
     private final RegisterForm form = new RegisterForm();
-    private final UserResponse response = mock(UserResponse.class);
+    private final UserResponse response = UserResponse.builder().build();
 
     @Mock
     private UserRepository userRepository;

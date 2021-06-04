@@ -12,3 +12,6 @@ spring:
 
 web:
   url: http://localhost:9000
+
+smalltasks:
+  jwt-secret: secret

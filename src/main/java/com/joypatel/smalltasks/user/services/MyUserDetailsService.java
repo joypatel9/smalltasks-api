@@ -18,18 +18,9 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String mobile) throws UsernameNotFoundException {
 
-//        User user = userRepository.findByMobile(mobile);
-//        if (mobile == null)
-//            throw new UsernameNotFoundException("User " + mobile + " not found");
-//
-//        return MyUserDetails.builder()
-//                        .username(user.getMobile())
-//                        .password(user.getPassword())
-//                        .authorities(List.of())
-//                .build();
-
         return userRepository.findByMobile(mobile)
                 .map(user -> MyUserDetails.builder()
+                        .id(user.getId())
                         .username(user.getMobile())
                         .password(user.getPassword())
                         .authorities(List.of()).build())
