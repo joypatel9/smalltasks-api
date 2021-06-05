@@ -16,16 +16,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.joypatel.smalltasks.common.MyUtils.UUID_LEN;
+import static com.joypatel.smalltasks.user.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class RegisterUserMvcTests extends AbstractMvcTests {
-
-    private final String name = "Joy Patel";
-    private final String mobile = "9078921543";
-    private final String password = "password";
 
     @Autowired
     private TestUserRepository repository;
@@ -73,8 +70,8 @@ class RegisterUserMvcTests extends AbstractMvcTests {
                 // then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("ref").isString())
-                .andExpect(jsonPath("name").value(name))
-                .andExpect(jsonPath("mobile").value(mobile));
+                .andExpect(jsonPath("name").value(NAME))
+                .andExpect(jsonPath("mobile").value(MOBILE));
 
         List<User> users = repository.findAll();
         assertEquals(1, users.size());
@@ -82,9 +79,9 @@ class RegisterUserMvcTests extends AbstractMvcTests {
         User user = users.get(0);
         assertNotNull(user.getId());
         assertEquals(UUID_LEN, user.getRef().length());
-        assertEquals(mobile, user.getMobile());
-        assertEquals(name, user.getName());
-        assertTrue(passwordEncoder.matches(password, user.getPassword()));
+        assertEquals(MOBILE, user.getMobile());
+        assertEquals(NAME, user.getName());
+        assertTrue(passwordEncoder.matches(PASSWORD, user.getPassword()));
     }
 
     @Test

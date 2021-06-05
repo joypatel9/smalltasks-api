@@ -22,7 +22,7 @@ public class UserController {
         return userRegistrationService.register(form);
     }
 
-    @GetMapping
+    @GetMapping("/me")
     public UserResponse getUser() {
         return userCatalogService.getCurrentUser();
     }

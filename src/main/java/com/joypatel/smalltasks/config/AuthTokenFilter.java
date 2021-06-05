@@ -1,11 +1,13 @@
 package com.joypatel.smalltasks.config;
 
 import com.joypatel.smalltasks.common.JwtService;
+import com.joypatel.smalltasks.common.MyUtils;
 import com.joypatel.smalltasks.common.security.MyUserDetails;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,10 +37,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_PREFIX = "Bearer ";
     private static final int TOKEN_PREFIX_LENGTH = 7;
 
     private final JwtService jwtService;
+    private final MyUtils myUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -79,7 +82,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         Claims claims = jwtService.extractClaims(token);
         if (jwtService.isTokenExpired(claims))
-            throw new RuntimeException("Auth token expired");
+            throw new BadCredentialsException(myUtils.getMessage("tokenExpired"));
 
         MyUserDetails userDetails = MyUserDetails.builder()
                 .username(claims.getSubject())

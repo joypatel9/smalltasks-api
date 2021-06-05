@@ -1,10 +1,12 @@
 package com.joypatel.smalltasks.user.dtos;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 @Getter
-@AllArgsConstructor
+@Jacksonized
+@Builder
 public class AuthToken {
     private final String token;
 }

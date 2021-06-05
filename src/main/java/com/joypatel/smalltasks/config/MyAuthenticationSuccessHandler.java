@@ -42,7 +42,9 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
 
         // write current-user data to the response
         response.getOutputStream().print(
-                objectMapper.writeValueAsString(new AuthToken(token)));
+                objectMapper.writeValueAsString(AuthToken.builder()
+                        .token(token)
+                        .build()));
 
         // as done in the base class
         clearAuthenticationAttributes(request);
