@@ -15,10 +15,14 @@ public class UserCatalogService {
     private final UserHelper userHelper;
 
     @PreAuthorize("isAuthenticated()")
-    public UserResponse getCurrentUser() {
+    public UserResponse getCurrentUserResponse() {
 
-        Integer userId = MyUtils.getCurrentUser().getId();
-        User user = userRepository.getById(userId);
+        User user = getCurrentUser();
         return userHelper.toResponse(user);
+    }
+
+    public User getCurrentUser() {
+        Integer userId = MyUtils.getCurrentUser().getId();
+        return userRepository.getById(userId);
     }
 }

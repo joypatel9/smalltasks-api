@@ -44,9 +44,10 @@ class UserRegistrationServiceTests {
     @BeforeEach
     void setUp() {
 
-        form.setMobile("9999999999");
+        form.setMobile("7835226756");
         form.setName("Joy Patel");
         form.setPassword("password");
+        form.setPincode(473846);
     }
 
     @Test
@@ -74,5 +75,6 @@ class UserRegistrationServiceTests {
         assertEquals(form.getMobile(), user.getMobile());
         assertEquals(form.getName(), user.getName());
         assertEquals(encodedPassword, user.getPassword());
+        assertEquals(form.getPincode(), user.getPincode());
     }
 }

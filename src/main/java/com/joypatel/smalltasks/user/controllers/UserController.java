@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping("/me")
     public UserResponse getUser() {
-        return userCatalogService.getCurrentUser();
+        return userCatalogService.getCurrentUserResponse();
     }
 
 }

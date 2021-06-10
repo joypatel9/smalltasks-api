@@ -3,7 +3,6 @@ package com.joypatel.smalltasks.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.joypatel.smalltasks.AbstractMvcTests;
 import com.joypatel.smalltasks.config.MyProperties;
-import com.joypatel.smalltasks.user.dtos.AuthToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
@@ -21,27 +20,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class LoginMvcTests extends AbstractMvcTests {
+ class LoginMvcTests extends AbstractMvcTests {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+     @Autowired
+     private ObjectMapper objectMapper;
 
-    @Autowired
-    private MyProperties properties;
+     @Autowired
+     private MyProperties properties;
 
-    @Test
-    @Sql("classpath:itest/user/sql/user.sql")
-    void login_Should_Respond401_When_InvalidPassword() throws Exception {
+     @Test
+     @Sql("classpath:itest/user/sql/user.sql")
+     void login_Should_Respond401_When_InvalidPassword() throws Exception {
 
-        login(MOBILE, "password2")
-                .andExpect(status().isUnauthorized());
-    }
+         login(MOBILE, "password2")
+                 .andExpect(status().isUnauthorized());
+     }
 
-    @Test
-    void getUser_Should_Respond401_When_ExpiredToken() throws Exception {
+     @Test
+     void getUser_Should_Respond401_When_ExpiredToken() throws Exception {
 
-        // given
-        String token = Jwts.builder()
+         // given
+         String token = Jwts.builder()
                 .setSubject(MOBILE)
                 .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, properties.getJwtSecret())
@@ -70,13 +69,10 @@ class LoginMvcTests extends AbstractMvcTests {
     void testLoginAndGetUser() throws Exception {
 
         // given
-        var result = login(MOBILE, PASSWORD).andReturn();
-
-        String body = result.getResponse().getContentAsString();
-        AuthToken token = objectMapper.readValue(body, AuthToken.class);
+        var token = getToken(MOBILE, PASSWORD);
 
         // when
-        getUser(token.getToken())
+        getUser(token)
 
                 // then
                 .andExpect(status().isOk())

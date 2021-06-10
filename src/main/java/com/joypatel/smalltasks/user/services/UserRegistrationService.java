@@ -42,6 +42,7 @@ public class UserRegistrationService {
         user.setMobile(form.getMobile());
         user.setName(form.getName());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
+        user.setPincode(form.getPincode());
 
         return user;
     }

@@ -1,4 +1,4 @@
-package com.joypatel.smalltasks.user.dtos;
+package com.joypatel.smalltasks.task.dtos;
 
 import com.joypatel.smalltasks.common.domain.AbstractResponse;
 import lombok.Getter;
@@ -8,9 +8,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @ToString(callSuper = true)
-public class UserResponse extends AbstractResponse {
+public class TaskResponse extends AbstractResponse {
 
-    private String mobile;
-    private String name;
-    private Integer pincode;
+    private String subject;
+    private String description;
+    private Integer originPincode;
 }

@@ -1,9 +1,6 @@
 package com.joypatel.smalltasks.user.dtos;
 
-import com.joypatel.smalltasks.user.validation.UniqueMobile;
-import com.joypatel.smalltasks.user.validation.ValidMobile;
-import com.joypatel.smalltasks.user.validation.ValidName;
-import com.joypatel.smalltasks.user.validation.ValidPassword;
+import com.joypatel.smalltasks.user.validation.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,4 +19,7 @@ public class RegisterForm {
 
     @ValidPassword
     private String password;
+
+    @ValidPincode
+    private Integer pincode;
 }

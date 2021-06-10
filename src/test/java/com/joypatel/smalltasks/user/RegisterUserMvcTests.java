@@ -71,7 +71,8 @@ class RegisterUserMvcTests extends AbstractMvcTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("ref").isString())
                 .andExpect(jsonPath("name").value(NAME))
-                .andExpect(jsonPath("mobile").value(MOBILE));
+                .andExpect(jsonPath("mobile").value(MOBILE))
+                .andExpect(jsonPath("pincode").value(PINCODE));
 
         List<User> users = repository.findAll();
         assertEquals(1, users.size());
@@ -82,6 +83,7 @@ class RegisterUserMvcTests extends AbstractMvcTests {
         assertEquals(MOBILE, user.getMobile());
         assertEquals(NAME, user.getName());
         assertTrue(passwordEncoder.matches(PASSWORD, user.getPassword()));
+        assertEquals(PINCODE, user.getPincode());
     }
 
     @Test

@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="t_user")
+@Table(name = "t_user")
 @Getter
 @Setter
 public class User extends AbstractEntity<Integer> {
@@ -18,6 +18,9 @@ public class User extends AbstractEntity<Integer> {
     public static final int PASSWORD_MIN = 8;
     public static final int PASSWORD_MAX = 32;
     private static final int NAME_MAX = 50;
+    public static final int PINCODE_MIN = 100000;
+    public static final int PINCODE_MAX = 999999;
+
 
     @Column(nullable = false, unique = true, length = MOBILE_LEN)
     private String mobile;
@@ -28,4 +31,6 @@ public class User extends AbstractEntity<Integer> {
     @Column(nullable = false) // Encrypted password will be longer than PASSWORD_MAX
     private String password;
 
+    @Column(nullable = false)
+    private Integer pincode;
 }

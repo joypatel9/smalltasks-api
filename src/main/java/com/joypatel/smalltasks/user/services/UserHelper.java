@@ -13,6 +13,7 @@ class UserHelper {
                 .ref(user.getRef())
                 .mobile(user.getMobile())
                 .name(user.getName())
+                .pincode(user.getPincode())
                 .build();
     }
 }

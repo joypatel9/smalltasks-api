@@ -17,8 +17,9 @@ class UserHelperTests {
         User user = new User();
         user.setRef("some-ref");
         user.setMobile("9872777736");
-        user.setName("Ram Patel");
-        
+        user.setName("Joy Patel");
+        user.setPincode(148392);
+
         // when
         UserResponse response = userHelper.toResponse(user);
 
@@ -26,5 +27,6 @@ class UserHelperTests {
         assertEquals(user.getRef(), response.getRef());
         assertEquals(user.getMobile(), response.getMobile());
         assertEquals(user.getName(), response.getName());
+        assertEquals(user.getPincode(), response.getPincode());
     }
 }
