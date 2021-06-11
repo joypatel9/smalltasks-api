@@ -44,7 +44,13 @@ public class TaskCreationService {
         task.setRef(utils.newUid());
         task.setSubject(form.getSubject());
         task.setDescription(form.getDescription());
-        task.setOriginPincode(form.getOriginPincode());
+
+        //If originPincode of task is not received in form then we use the current user's pincode
+        if (form.getOriginPincode() == null) {
+            task.setOriginPincode(userCatalogService.getCurrentUser().getPincode());
+        } else {
+            task.setOriginPincode(form.getOriginPincode());
+        }
 
         return task;
     }
