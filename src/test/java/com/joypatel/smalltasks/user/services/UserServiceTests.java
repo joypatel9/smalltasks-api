@@ -3,15 +3,20 @@ package com.joypatel.smalltasks.user.services;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
 import com.joypatel.smalltasks.user.entities.User;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UserHelperTests {
+@ExtendWith(MockitoExtension.class)
+class UserServiceTests {
 
-    private final UserHelper userHelper = new UserHelper();
+    @InjectMocks
+    private UserService userService;
 
     @Test
-    void UserHelper_toResponse() {
+    void UserService_toResponse() {
 
         // given
         User user = new User();
@@ -21,7 +26,7 @@ class UserHelperTests {
         user.setPincode(148392);
 
         // when
-        UserResponse response = userHelper.toResponse(user);
+        UserResponse response = userService.toResponse(user);
 
         // then
         assertEquals(user.getRef(), response.getRef());

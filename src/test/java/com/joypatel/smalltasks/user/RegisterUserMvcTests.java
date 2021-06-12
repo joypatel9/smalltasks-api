@@ -31,13 +31,12 @@ class RegisterUserMvcTests extends AbstractMvcTests {
     private PasswordEncoder passwordEncoder;
 
     private String registerUserData;
+    private String invalidData;
 
     @Value("classpath:itest/user/payload/register-user.json")
     public void setRegisterUserData(Resource resource) throws IOException {
         registerUserData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
-
-    private String invalidData;
 
     @Value("classpath:itest/user/payload/register-user-invalid-data.json")
     public void setInvalidData(Resource resource) throws IOException {

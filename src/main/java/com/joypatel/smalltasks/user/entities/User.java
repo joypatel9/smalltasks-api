@@ -17,11 +17,9 @@ public class User extends AbstractEntity<Integer> {
     public static final int MOBILE_LEN = 10;
     public static final int PASSWORD_MIN = 8;
     public static final int PASSWORD_MAX = 32;
-    private static final int NAME_MAX = 50;
     public static final int PINCODE_MIN = 100000;
     public static final int PINCODE_MAX = 999999;
-
-
+    private static final int NAME_MAX = 50;
     @Column(nullable = false, unique = true, length = MOBILE_LEN)
     private String mobile;
 

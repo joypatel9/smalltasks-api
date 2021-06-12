@@ -34,13 +34,12 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     private TestTaskRepository repository;
 
     private String createTaskData;
+    private String invalidData;
 
     @Value("classpath:itest/task/payload/create-task.json")
     public void setCreateTaskData(Resource resource) throws IOException {
         createTaskData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
-
-    private String invalidData;
 
     @Value("classpath:itest/task/payload/create-task-invalid-data.json")
     public void setInvalidData(Resource resource) throws IOException {

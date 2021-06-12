@@ -20,29 +20,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class MyControllerAdvice {
 
-    @AllArgsConstructor
-    @Getter
-    public static class Error {
-
-        private final String field;
-        private final String code;
-        private final String message;
-
-        public static Error of(ObjectError error) {
-            return new Error(
-                    error instanceof FieldError ?  ((FieldError)error).getField() : error.getObjectName(),
-                    error.getCode(),
-                    error.getDefaultMessage());
-        }
-
-        public static Error of(ConstraintViolation<?> error) {
-            return new Error(
-                    error.getPropertyPath().toString().split("\\.")[2],
-                    error.getMessageTemplate(),
-                    error.getMessage());
-        }
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -60,6 +37,29 @@ public class MyControllerAdvice {
         return ex.getConstraintViolations().stream()
                 .map(Error::of)
                 .collect(Collectors.toSet());
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class Error {
+
+        private final String field;
+        private final String code;
+        private final String message;
+
+        public static Error of(ObjectError error) {
+            return new Error(
+                    error instanceof FieldError ? ((FieldError) error).getField() : error.getObjectName(),
+                    error.getCode(),
+                    error.getDefaultMessage());
+        }
+
+        public static Error of(ConstraintViolation<?> error) {
+            return new Error(
+                    error.getPropertyPath().toString().split("\\.")[2],
+                    error.getMessageTemplate(),
+                    error.getMessage());
+        }
     }
 
 }

@@ -22,7 +22,7 @@ public abstract class AbstractEntity<ID extends Serializable> {
     @GeneratedValue
     private ID id;
 
-    @Column(nullable = false, length=UUID_LEN, unique = true)
+    @Column(nullable = false, length = UUID_LEN, unique = true)
     private String ref;
 
     @CreatedBy

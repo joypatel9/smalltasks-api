@@ -27,7 +27,7 @@ class UserRegistrationServiceTests {
     private UserRepository userRepository;
 
     @Mock
-    private UserHelper userHelper;
+    private UserService userService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -59,7 +59,7 @@ class UserRegistrationServiceTests {
 
         when(passwordEncoder.encode(form.getPassword())).thenReturn(encodedPassword);
         when(utils.newUid()).thenReturn(ref);
-        when(userHelper.toResponse(any(User.class))).thenReturn(response);
+        when(userService.toResponse(any(User.class))).thenReturn(response);
 
         // when
         UserResponse r = service.register(form);
@@ -69,7 +69,7 @@ class UserRegistrationServiceTests {
 
         verify(userRepository).save(userCaptor.capture());
         User user = userCaptor.getValue();
-        verify(userHelper).toResponse(user);
+        verify(userService).toResponse(user);
 
         assertEquals(ref, user.getRef());
         assertEquals(form.getMobile(), user.getMobile());

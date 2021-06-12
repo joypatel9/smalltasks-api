@@ -20,7 +20,7 @@ import javax.validation.Valid;
 public class TaskCreationService {
 
     private final TaskRepository taskRepository;
-    private final TaskHelper taskHelper;
+    private final TaskService taskService;
     private final UserCatalogService userCatalogService;
     private final MyUtils utils;
 
@@ -32,7 +32,7 @@ public class TaskCreationService {
         Task task = toTask(form);
         taskRepository.save(task);
 
-        TaskResponse response = taskHelper.toResponse(task);
+        TaskResponse response = taskService.toResponse(task);
         log.info("Created task {}", response);
         return response;
     }
@@ -44,14 +44,9 @@ public class TaskCreationService {
         task.setRef(utils.newUid());
         task.setSubject(form.getSubject());
         task.setDescription(form.getDescription());
+        task.setStatus(Task.Status.OPEN);
 
-        //If originPincode of task is not received in form then we use the current user's pincode
-        if (form.getOriginPincode() == null) {
-            task.setOriginPincode(userCatalogService.getCurrentUser().getPincode());
-        } else {
-            task.setOriginPincode(form.getOriginPincode());
-        }
-
+        task.setOriginPincode(form.getOriginPincode() == null ? userCatalogService.getCurrentUser().getPincode() : form.getOriginPincode());
         return task;
     }
 }
