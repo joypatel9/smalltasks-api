@@ -30,6 +30,7 @@ public abstract class AbstractEntity<ID extends Serializable> {
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private Date createdDate;
 
     @LastModifiedBy
@@ -37,6 +38,7 @@ public abstract class AbstractEntity<ID extends Serializable> {
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private Date lastModifiedDate;
 
     @Version
