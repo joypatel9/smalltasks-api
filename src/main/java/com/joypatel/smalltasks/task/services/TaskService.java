@@ -45,7 +45,11 @@ public class TaskService {
                 .collect(toList());
     }
 
-    public List<Task> findOpenTasks(Integer pincode, User currentUser) {
-        return taskRepository.findTasks(pincode, currentUser, Task.Status.OPEN);
+    public List<Task> findOpenTasks(Integer pincode, User currentUser, int beyondId, boolean next, int itemCount) {
+
+        if (next)
+            return taskRepository.findNextTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN, itemCount);
+        else
+            return taskRepository.findPreviousTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN, itemCount);
     }
 }

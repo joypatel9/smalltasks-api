@@ -26,7 +26,12 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> retrieveTasks(@RequestParam Optional<Integer> pincode) {
-        return taskRetrievalService.getTasks(pincode);
+    public List<TaskResponse> retrieveTasks(
+            @RequestParam Optional<Integer> pincode,
+            @RequestParam(defaultValue = "0") Integer beyondId,
+            @RequestParam(defaultValue = "10") Integer itemCount,
+            @RequestParam(defaultValue = "true") Boolean next) {
+
+        return taskRetrievalService.getTasks(pincode, beyondId, next, itemCount);
     }
 }

@@ -43,6 +43,4 @@ public class MyUtils {
     public String getMessage(String messageKey, Object... args) {
         return messageSource.getMessage(messageKey, args, LocaleContextHolder.getLocale());
     }
-
-
 }

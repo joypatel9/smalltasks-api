@@ -17,18 +17,24 @@ public class Task extends AbstractEntity<Integer> {
     public static final int PINCODE_MAX = 999999;
     private static final int SUBJECT_MAX = 30;
     private static final int DESCRIPTION_MAX = 5000;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private User creator;
+
     @Column(nullable = false, length = SUBJECT_MAX)
     private String subject;
+
     @Column(length = DESCRIPTION_MAX)
     private String description;
+
     @Column(nullable = false)
     private Integer originPincode;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "executor_id")
     private User executor;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;

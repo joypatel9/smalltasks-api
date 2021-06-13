@@ -20,7 +20,7 @@ public class TaskRetrievalService {
     public UserCatalogService userCatalogService;
 
     @PreAuthorize("isAuthenticated()")
-    public List<TaskResponse> getTasks(Optional<Integer> optionalPincode) {
+    public List<TaskResponse> getTasks(Optional<Integer> optionalPincode, int beyondId, boolean next, int itemCount) {
 
         log.info("Getting tasks with originPincode as : {}", optionalPincode);
 
@@ -28,7 +28,7 @@ public class TaskRetrievalService {
                 userCatalogService.getCurrentUser().getPincode());
 
         List<TaskResponse> taskResponses = taskService.toResponse(
-                taskService.findOpenTasks(pincode, userCatalogService.getCurrentUser()));
+                taskService.findOpenTasks(pincode, userCatalogService.getCurrentUser(), beyondId, next, itemCount));
 
         return taskResponses;
     }
