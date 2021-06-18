@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.joypatel.smalltasks.task.entities.Task.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -60,6 +61,7 @@ class TaskCreationServiceTests {
         assertEquals(ref, task.getRef());
         assertEquals(form.getSubject(), task.getSubject());
         assertEquals(form.getDescription(), task.getDescription());
+        assertEquals(OPEN, task.getStatus());
 
         return task;
     }

@@ -69,7 +69,7 @@ class LoginMvcTests extends AbstractMvcTests {
     void testLoginAndGetUser() throws Exception {
 
         // given
-        var token = getToken(MOBILE, PASSWORD);
+        var token = loginAndGetToken(MOBILE, PASSWORD);
 
         // when
         getUser(token)

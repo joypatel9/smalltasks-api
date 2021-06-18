@@ -51,7 +51,7 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     void createTask_When_InvalidData() throws Exception {
 
         // given
-        var token = getToken(MOBILE, PASSWORD);
+        var token = loginAndGetToken(MOBILE, PASSWORD);
 
         // when
         mockMvc.perform(post("/tasks")
@@ -71,7 +71,7 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     void createTask() throws Exception {
 
         // given
-        var token = getToken(MOBILE, PASSWORD);
+        var token = loginAndGetToken(MOBILE, PASSWORD);
 
         // when
         mockMvc.perform(post("/tasks")

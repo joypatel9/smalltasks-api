@@ -19,26 +19,26 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
 
-    TaskResponse toResponse(Task task) {
+    public TaskResponse toResponse(Task task) {
 
         if (task == null)
             return null;
 
-        UserResponse creator = userService.toResponse(task.getCreator());
-        UserResponse executor = userService.toResponse(task.getExecutor());
+        UserResponse creatorResponse = userService.toResponse(task.getCreator());
+        UserResponse executorResponse = userService.toResponse(task.getExecutor());
 
         return TaskResponse.builder()
                 .ref(task.getRef())
                 .subject(task.getSubject())
                 .description(task.getDescription())
                 .originPincode(task.getOriginPincode())
-                .creator(creator)
-                .executor(executor)
+                .creator(creatorResponse)
+                .executor(executorResponse)
                 .status(task.getStatus())
                 .build();
     }
 
-    public List<TaskResponse> toResponse(List<Task> tasks) {
+    public List<TaskResponse> toResponseList(List<Task> tasks) {
 
         return tasks.stream()
                 .map(this::toResponse)
@@ -48,8 +48,8 @@ public class TaskService {
     public List<Task> findOpenTasks(Integer pincode, User currentUser, int beyondId, boolean next, int itemCount) {
 
         if (next)
-            return taskRepository.findNextTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN, itemCount);
+            return taskRepository.findNextTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
         else
-            return taskRepository.findPreviousTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN, itemCount);
+            return taskRepository.findPreviousTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
     }
 }

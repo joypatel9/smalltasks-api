@@ -15,20 +15,20 @@ import java.util.Optional;
 @Slf4j
 public class TaskRetrievalService {
 
-    private final TaskRepository taskRepository;
     private final TaskService taskService;
-    public UserCatalogService userCatalogService;
+    private final UserCatalogService userCatalogService;
 
     @PreAuthorize("isAuthenticated()")
     public List<TaskResponse> getTasks(Optional<Integer> optionalPincode, int beyondId, boolean next, int itemCount) {
 
-        log.info("Getting tasks with originPincode as : {}", optionalPincode);
-
         Integer pincode = optionalPincode.orElseGet(() ->
                 userCatalogService.getCurrentUser().getPincode());
 
-        List<TaskResponse> taskResponses = taskService.toResponse(
+        List<TaskResponse> taskResponses = taskService.toResponseList(
                 taskService.findOpenTasks(pincode, userCatalogService.getCurrentUser(), beyondId, next, itemCount));
+
+        log.info("Got tasks with originPincode={}, beyondId={}, next={}, itemCount={}: {}",
+                pincode, beyondId, next, itemCount, taskResponses);
 
         return taskResponses;
     }
