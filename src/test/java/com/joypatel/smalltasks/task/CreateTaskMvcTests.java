@@ -84,7 +84,8 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
                 .andExpect(jsonPath("ref").isString())
                 .andExpect(jsonPath("subject").value(SUBJECT))
                 .andExpect(jsonPath("description").value(DESCRIPTION))
-                .andExpect(jsonPath("originPincode").value(ORIGIN_PINCODE));
+                .andExpect(jsonPath("originPincode").value(ORIGIN_PINCODE))
+                .andExpect(jsonPath("creator.ref").value("user-ref-1"));
 
         List<Task> tasks = repository.findAll();
         assertEquals(1, tasks.size());

@@ -24,20 +24,26 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TaskCreationServiceTests {
 
+    private final String ref = "some-ref";
+    private final User user = new User();
     private final TaskCreationForm form = new TaskCreationForm();
-
     private final TaskResponse response = TaskResponse.builder().build();
-    String ref = "some-ref";
+
     @Mock
     private TaskRepository taskRepository;
+
     @Mock
     private TaskService taskService;
+
     @Mock
     private MyUtils utils;
+
     @Mock
     private UserCatalogService userCatalogService;
+
     @InjectMocks
     private TaskCreationService service;
+    
     @Captor
     private ArgumentCaptor<Task> taskCaptor;
 
@@ -46,7 +52,10 @@ class TaskCreationServiceTests {
         form.setSubject("This is the task's subject");
         form.setDescription("This is the task's description");
 
+        user.setPincode(751024);
+
         when(utils.newUid()).thenReturn(ref);
+        when(userCatalogService.getCurrentUser()).thenReturn(user);
         when(taskService.toResponse(any(Task.class))).thenReturn(response);
     }
 
@@ -62,6 +71,7 @@ class TaskCreationServiceTests {
         assertEquals(form.getSubject(), task.getSubject());
         assertEquals(form.getDescription(), task.getDescription());
         assertEquals(OPEN, task.getStatus());
+        assertEquals(user, task.getCreator());
 
         return task;
     }
@@ -81,16 +91,6 @@ class TaskCreationServiceTests {
 
     @Test
     void test_create_task_without_originPincode() {
-        //given
-
-        //current user
-        User user = new User();
-        user.setMobile("9334778738");
-        user.setName("Joy Patel");
-        user.setPassword("password");
-        user.setPincode(751024);
-
-        when(userCatalogService.getCurrentUser()).thenReturn(user);
 
         //when
         TaskResponse taskResponse = service.create(form);

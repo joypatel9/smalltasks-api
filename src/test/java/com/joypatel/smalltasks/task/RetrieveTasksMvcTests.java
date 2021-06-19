@@ -41,11 +41,13 @@ public class RetrieveTasksMvcTests extends AbstractMvcTests {
                 .andExpect(jsonPath("$[0].subject").value("This is the subject"))
                 .andExpect(jsonPath("$[0].description").value("This is the description"))
                 .andExpect(jsonPath("$[0].originPincode").value(948292))
+                .andExpect(jsonPath("$[0].creator.ref").value("user-ref-3"))
 
                 .andExpect(jsonPath("$[1].ref").value("task-ref-6"))
                 .andExpect(jsonPath("$[1].subject").value("This is the subject"))
                 .andExpect(jsonPath("$[1].description").value("This is the description"))
-                .andExpect(jsonPath("$[1].originPincode").value(948292));
+                .andExpect(jsonPath("$[1].originPincode").value(948292))
+                .andExpect(jsonPath("$[1].creator.ref").value("user-ref-3"));
     }
 
     @Test
