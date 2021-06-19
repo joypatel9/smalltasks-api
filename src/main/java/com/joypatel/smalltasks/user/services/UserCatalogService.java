@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 public class UserCatalogService {
 
     private final UserRepository userRepository;
-    private final UserHelper userHelper;
+    private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
     public UserResponse getCurrentUserResponse() {
 
         User user = getCurrentUser();
-        return userHelper.toResponse(user);
+        return userService.toResponse(user);
     }
 
     public User getCurrentUser() {

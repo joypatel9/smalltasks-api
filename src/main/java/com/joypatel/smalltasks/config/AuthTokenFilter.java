@@ -43,6 +43,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final MyUtils myUtils;
 
+    public static Collection<? extends GrantedAuthority> toAuthorities(List<Map<String, String>> authorities) {
+        return authorities.stream()
+                .map(authority -> authority.get("authority"))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -91,12 +98,5 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 .build();
 
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-    }
-
-    public static Collection<? extends GrantedAuthority> toAuthorities(List<Map<String, String>> authorities) {
-        return authorities.stream()
-                .map(authority -> authority.get("authority"))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
     }
 }

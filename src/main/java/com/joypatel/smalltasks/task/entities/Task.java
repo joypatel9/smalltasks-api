@@ -13,10 +13,10 @@ import javax.persistence.*;
 @Setter
 public class Task extends AbstractEntity<Integer> {
 
-    private static final int SUBJECT_MAX = 30;
-    private static final int DESCRIPTION_MAX = 5000;
     public static final int PINCODE_MIN = 100000;
     public static final int PINCODE_MAX = 999999;
+    private static final int SUBJECT_MAX = 30;
+    private static final int DESCRIPTION_MAX = 5000;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
@@ -25,9 +25,21 @@ public class Task extends AbstractEntity<Integer> {
     @Column(nullable = false, length = SUBJECT_MAX)
     private String subject;
 
-    @Column(nullable = true, length = DESCRIPTION_MAX)
+    @Column(length = DESCRIPTION_MAX)
     private String description;
 
     @Column(nullable = false)
     private Integer originPincode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "executor_id")
+    private User executor;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public enum Status {
+        OPEN, ASSIGNED, FINISHED
+    }
 }

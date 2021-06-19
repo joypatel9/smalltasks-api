@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static com.joypatel.smalltasks.task.entities.Task.Status.OPEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -23,16 +24,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TaskCreationServiceTests {
 
-    private final TaskCreationForm form1 = new TaskCreationForm();
-    private final TaskCreationForm form2 = new TaskCreationForm();
-
+    private final String ref = "some-ref";
+    private final User user = new User();
+    private final TaskCreationForm form = new TaskCreationForm();
     private final TaskResponse response = TaskResponse.builder().build();
 
     @Mock
     private TaskRepository taskRepository;
 
     @Mock
-    private TaskHelper taskHelper;
+    private TaskService taskService;
 
     @Mock
     private MyUtils utils;
@@ -42,78 +43,60 @@ class TaskCreationServiceTests {
 
     @InjectMocks
     private TaskCreationService service;
-
+    
     @Captor
     private ArgumentCaptor<Task> taskCaptor;
 
     @BeforeEach
     void setUp() {
-        //form with originPincode
-        form1.setSubject("This is the task's subject");
-        form1.setDescription("This is the task's description");
-        form1.setOriginPincode(734278);
+        form.setSubject("This is the task's subject");
+        form.setDescription("This is the task's description");
 
-        //form without originPincode
-        form2.setSubject("This is the task's subject");
-        form2.setDescription("This is the task's description");
+        user.setPincode(751024);
+
+        when(utils.newUid()).thenReturn(ref);
+        when(userCatalogService.getCurrentUser()).thenReturn(user);
+        when(taskService.toResponse(any(Task.class))).thenReturn(response);
+    }
+
+    private Task commonTests(TaskResponse taskResponse) {
+
+        assertEquals(response, taskResponse);
+
+        verify(taskRepository).save(taskCaptor.capture());
+        Task task = taskCaptor.getValue();
+        verify(taskService).toResponse(task);
+
+        assertEquals(ref, task.getRef());
+        assertEquals(form.getSubject(), task.getSubject());
+        assertEquals(form.getDescription(), task.getDescription());
+        assertEquals(OPEN, task.getStatus());
+        assertEquals(user, task.getCreator());
+
+        return task;
     }
 
     @Test
     void test_create_task_with_originPincode() {
+        // given
+        form.setOriginPincode(723482);
 
-        //given
-        String ref = "some-ref";
+        // when
+        TaskResponse taskResponse = service.create(form);
 
-        when(utils.newUid()).thenReturn(ref);
-        when(taskHelper.toResponse(any(Task.class))).thenReturn(response);
-
-        //when
-        TaskResponse r = service.create(form1);
-
-        //then
-        assertEquals(response, r);
-
-        verify(taskRepository).save(taskCaptor.capture());
-        Task task = taskCaptor.getValue();
-        verify(taskHelper).toResponse(task);
-
-        assertEquals(ref, task.getRef());
-        assertEquals(form1.getSubject(), task.getSubject());
-        assertEquals(form1.getDescription(), task.getDescription());
-        assertEquals(form1.getOriginPincode(), task.getOriginPincode());
+        // then
+        Task task = commonTests(taskResponse);
+        assertEquals(form.getOriginPincode(), task.getOriginPincode());
     }
 
     @Test
     void test_create_task_without_originPincode() {
 
-        //given
-        String ref = "some-ref";
-
-        when(utils.newUid()).thenReturn(ref);
-        when(taskHelper.toResponse(any(Task.class))).thenReturn(response);
-
-        //creating current user
-        User user = new User();
-        user.setMobile("9334778738");
-        user.setName("Joy Patel");
-        user.setPassword("password");
-        user.setPincode(751024);
-
-        when(userCatalogService.getCurrentUser()).thenReturn(user);
-
         //when
-        TaskResponse r = service.create(form2);
+        TaskResponse taskResponse = service.create(form);
 
         //then
-        assertEquals(response, r);
-
-        verify(taskRepository).save(taskCaptor.capture());
-        Task task = taskCaptor.getValue();
-        verify(taskHelper).toResponse(task);
-
-        assertEquals(ref, task.getRef());
-        assertEquals(form2.getSubject(), task.getSubject());
-        assertEquals(form2.getDescription(), task.getDescription());
-        assertEquals(751024, task.getOriginPincode());
+        Task task = commonTests(taskResponse);
+        assertEquals(user.getPincode(), task.getOriginPincode());
     }
 }

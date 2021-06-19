@@ -11,10 +11,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @NotBlank
 @Size(max = 100)
 @Retention(RUNTIME)
-@Constraint(validatedBy = { })
+@Constraint(validatedBy = {})
 public @interface ValidName {
 
     String message() default "";
-    Class<?>[] groups() default { };
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

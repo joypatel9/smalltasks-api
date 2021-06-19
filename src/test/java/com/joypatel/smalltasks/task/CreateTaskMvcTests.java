@@ -34,13 +34,12 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     private TestTaskRepository repository;
 
     private String createTaskData;
+    private String invalidData;
 
     @Value("classpath:itest/task/payload/create-task.json")
     public void setCreateTaskData(Resource resource) throws IOException {
         createTaskData = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
     }
-
-    private String invalidData;
 
     @Value("classpath:itest/task/payload/create-task-invalid-data.json")
     public void setInvalidData(Resource resource) throws IOException {
@@ -52,7 +51,7 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     void createTask_When_InvalidData() throws Exception {
 
         // given
-        var token = getToken(MOBILE, PASSWORD);
+        var token = loginAndGetToken(MOBILE, PASSWORD);
 
         // when
         mockMvc.perform(post("/tasks")
@@ -72,7 +71,7 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
     void createTask() throws Exception {
 
         // given
-        var token = getToken(MOBILE, PASSWORD);
+        var token = loginAndGetToken(MOBILE, PASSWORD);
 
         // when
         mockMvc.perform(post("/tasks")
@@ -85,7 +84,8 @@ public class CreateTaskMvcTests extends AbstractMvcTests {
                 .andExpect(jsonPath("ref").isString())
                 .andExpect(jsonPath("subject").value(SUBJECT))
                 .andExpect(jsonPath("description").value(DESCRIPTION))
-                .andExpect(jsonPath("originPincode").value(ORIGIN_PINCODE));
+                .andExpect(jsonPath("originPincode").value(ORIGIN_PINCODE))
+                .andExpect(jsonPath("creator.ref").value("user-ref-1"));
 
         List<Task> tasks = repository.findAll();
         assertEquals(1, tasks.size());

@@ -18,17 +18,6 @@ public class MyUtils {
 
     private final MessageSource messageSource;
 
-    public String newUid() {
-        return UUID.randomUUID().toString();
-    }
-
-    /**
-     * Gets a message from messages.properties
-     */
-    public String getMessage(String messageKey, Object... args) {
-        return messageSource.getMessage(messageKey, args, LocaleContextHolder.getLocale());
-    }
-
     public static MyUserDetails getCurrentUser(Authentication auth) {
 
         if (auth != null) {
@@ -44,5 +33,14 @@ public class MyUtils {
         return getCurrentUser(SecurityContextHolder.getContext().getAuthentication());
     }
 
+    public String newUid() {
+        return UUID.randomUUID().toString();
+    }
 
+    /**
+     * Gets a message from messages.properties
+     */
+    public String getMessage(String messageKey, Object... args) {
+        return messageSource.getMessage(messageKey, args, LocaleContextHolder.getLocale());
+    }
 }

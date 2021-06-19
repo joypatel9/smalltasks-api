@@ -35,7 +35,7 @@ public abstract class AbstractMvcTests {
                 .param("password", password));
     }
 
-    protected String getToken(String mobile, String password) throws Exception {
+    protected String loginAndGetToken(String mobile, String password) throws Exception {
 
         var result = login(MOBILE, PASSWORD).andReturn();
 

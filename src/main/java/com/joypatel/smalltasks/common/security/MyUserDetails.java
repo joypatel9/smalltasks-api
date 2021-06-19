@@ -12,12 +12,11 @@ import java.util.Collection;
 @ToString(exclude = "password")
 public class MyUserDetails implements UserDetails {
 
-    @Getter
-    private Integer id;
-
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    @Getter
+    private Integer id;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

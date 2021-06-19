@@ -19,7 +19,7 @@ import javax.validation.Valid;
 public class UserRegistrationService {
 
     private final UserRepository userRepository;
-    private final UserHelper userHelper;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final MyUtils utils;
 
@@ -30,7 +30,7 @@ public class UserRegistrationService {
         User user = toUser(form);
         userRepository.save(user);
 
-        UserResponse response = userHelper.toResponse(user);
+        UserResponse response = userService.toResponse(user);
         log.info("Registered user {}", response);
         return response;
     }
