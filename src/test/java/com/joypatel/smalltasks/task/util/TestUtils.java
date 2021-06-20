@@ -1,4 +1,4 @@
-package com.joypatel.smalltasks.task;
+package com.joypatel.smalltasks.task.util;
 
 public class TestUtils {
     public static String SUBJECT = "This is the task's subject";

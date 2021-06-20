@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ public class UserRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final MyUtils utils;
 
+    @Transactional
     public UserResponse register(@Valid RegisterForm form) {
 
         log.info("Registering user {}", form);

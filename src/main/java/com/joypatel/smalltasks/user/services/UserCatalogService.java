@@ -6,6 +6,7 @@ import com.joypatel.smalltasks.user.entities.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -15,8 +16,8 @@ public class UserCatalogService {
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional(readOnly = true)
     public UserResponse getCurrentUserResponse() {
-
         User user = getCurrentUser();
         return userService.toResponse(user);
     }
