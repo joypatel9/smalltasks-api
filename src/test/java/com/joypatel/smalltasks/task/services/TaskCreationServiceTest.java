@@ -43,7 +43,7 @@ class TaskCreationServiceTests {
 
     @InjectMocks
     private TaskCreationService service;
-    
+
     @Captor
     private ArgumentCaptor<Task> taskCaptor;
 

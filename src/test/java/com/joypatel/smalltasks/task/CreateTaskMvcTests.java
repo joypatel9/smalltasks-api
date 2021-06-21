@@ -3,6 +3,7 @@ package com.joypatel.smalltasks.task;
 import com.joypatel.smalltasks.AbstractMvcTests;
 import com.joypatel.smalltasks.common.JwtService;
 import com.joypatel.smalltasks.task.entities.Task;
+import com.joypatel.smalltasks.task.util.TestTaskRepository;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.joypatel.smalltasks.common.MyUtils.UUID_LEN;
-import static com.joypatel.smalltasks.task.TestUtils.*;
+import static com.joypatel.smalltasks.task.util.TestUtils.*;
 import static com.joypatel.smalltasks.user.TestUtils.MOBILE;
 import static com.joypatel.smalltasks.user.TestUtils.PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;

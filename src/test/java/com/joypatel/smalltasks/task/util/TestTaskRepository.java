@@ -1,4 +1,4 @@
-package com.joypatel.smalltasks.task;
+package com.joypatel.smalltasks.task.util;
 
 import com.joypatel.smalltasks.task.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -25,6 +26,7 @@ public class TaskCreationService {
     private final MyUtils utils;
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional
     public TaskResponse create(@Valid TaskCreationForm form) {
 
         log.info("Creating task {}", form);

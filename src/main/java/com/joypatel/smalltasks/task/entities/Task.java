@@ -39,6 +39,10 @@ public class Task extends AbstractEntity<Integer> {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    public boolean isOpen() {
+        return Task.Status.OPEN.equals(status);
+    }
+
     public enum Status {
         OPEN, ASSIGNED, FINISHED
     }
