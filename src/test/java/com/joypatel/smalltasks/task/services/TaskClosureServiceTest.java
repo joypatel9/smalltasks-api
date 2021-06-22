@@ -6,7 +6,6 @@ import com.joypatel.smalltasks.common.MyUtils;
 import com.joypatel.smalltasks.task.entities.Task;
 import com.joypatel.smalltasks.user.entities.User;
 import com.joypatel.smalltasks.user.services.UserCatalogService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,13 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
-class TaskAssignmentServiceTest {
-
-    private final Integer taskId = 130;
-    private final Task task = new Task();
-    private final User user = new User();
+class TaskClosureServiceTest {
 
     @Mock
     private TaskService taskService;
@@ -39,43 +33,64 @@ class TaskAssignmentServiceTest {
     private TaskRepository taskRepository;
 
     @InjectMocks
-    TaskAssignmentService service;
+    private TaskClosureService service;
 
     @Test
-    void assignOpenTask() {
+    void closeTaskCreatedByCurrentUser_Should_CloseTask() {
 
         // given
-        task.setStatus(Task.Status.OPEN);
+        Integer creatorId = 1200;
+        User creator = new User();
+        creator.setId(creatorId);
+
+        Integer taskId = 750;
+        Task task = new Task();
+        task.setId(taskId);
+        task.setCreator(creator);
+
+        User currentUser = new User();
+        currentUser.setId(creatorId);
+
         when(taskService.getTaskById(taskId)).thenReturn(task);
-        when(userCatalogService.getCurrentUser()).thenReturn(user);
+        when(userCatalogService.getCurrentUser()).thenReturn(currentUser);
 
         // when
-        service.assignTask(taskId);
+        service.closeTask(taskId);
 
         // then
-        assertEquals(Task.Status.ASSIGNED, task.getStatus());
-        assertEquals(user, task.getExecutor());
+        assertEquals(Task.Status.CLOSED, task.getStatus());
     }
 
+
     @Test
-    void assignNonOpenTask_Should_ThrowBusinessException() {
+    void closeTaskNotCreatedByCurrentUser_Should_Throw_BusinessException() {
 
         // given
-        task.setStatus(Task.Status.ASSIGNED);
-
-        when(taskService.getTaskById(taskId)).thenReturn(task);
-
         String errorField = "task";
-        String errorCode = "taskNotOpen";
-        String errorMessage = "Task is not open";
+        String errorCode = "taskNotCreatedByCurrentUser";
+        String errorMessage = "You are not the creator of this task";
 
         MyError expectedError = MyError.of(errorField, errorCode, errorMessage);
         when(utils.getError(errorField, errorCode)).thenReturn(expectedError);
 
-        try {
+        final Integer nonBelongingTaskId = 600;
 
+        User creator = new User();
+        creator.setId(1200);
+
+        Task task = new Task();
+        task.setId(nonBelongingTaskId);
+        task.setCreator(creator);
+
+        User currentUser = new User();
+        currentUser.setId(2000);
+
+        when(taskService.getTaskById(nonBelongingTaskId)).thenReturn(task);
+        when(userCatalogService.getCurrentUser()).thenReturn(currentUser);
+
+        try {
             // when
-            service.assignTask(taskId);
+            service.closeTask(nonBelongingTaskId);
             fail();
 
         } catch (BusinessException ex) {
@@ -86,5 +101,6 @@ class TaskAssignmentServiceTest {
             MyError actualError = ex.getErrors().iterator().next();
             assertEquals(expectedError, actualError);
         }
+
     }
 }

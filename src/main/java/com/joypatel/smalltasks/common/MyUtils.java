@@ -43,4 +43,8 @@ public class MyUtils {
     public String getMessage(String messageKey, Object... args) {
         return messageSource.getMessage(messageKey, args, LocaleContextHolder.getLocale());
     }
+
+    public MyError getError(String field, String code, Object... args) {
+        return MyError.of(field, code, getMessage(code, args));
+    }
 }
