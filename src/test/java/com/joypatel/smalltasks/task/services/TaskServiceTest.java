@@ -1,5 +1,8 @@
 package com.joypatel.smalltasks.task.services;
 
+import com.joypatel.smalltasks.common.BusinessException;
+import com.joypatel.smalltasks.common.MyError;
+import com.joypatel.smalltasks.common.MyUtils;
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
 import com.joypatel.smalltasks.task.entities.Task;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
@@ -10,10 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +34,9 @@ class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
+
+    @Mock
+    private MyUtils utils;
 
     @InjectMocks
     private TaskService taskService;
@@ -103,6 +112,48 @@ class TaskServiceTest {
 
         // then
         verify(taskRepository).findPreviousTasks(721023, user.getId(), 5, Task.Status.OPEN.name(), 5);
+    }
+
+    @Test
+    void TaskService_getTaskById_Should_return_task() {
+
+        // given
+        Integer taskId = 50;
+        Task task = new Task();
+        task.setId(taskId);
+
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+
+        // when
+        Task actualTask = taskService.getTaskById(taskId);
+
+        // then
+        assertEquals(task, actualTask);
+    }
+
+    @Test
+    void TaskService_getTaskById_NonExistingTask_Should_throw_BusinessException() {
+
+        // given
+        Integer nonExistingTaskId = 90;
+        when(taskRepository.findById(nonExistingTaskId)).thenReturn(Optional.empty());
+
+        MyError expectedError = MyError.of("task", "notFound", "not found");
+        when(utils.getError("task", "notFound")).thenReturn(expectedError);
+
+        try {
+            // when
+            taskService.getTaskById(nonExistingTaskId);
+            fail();
+
+        } catch (BusinessException ex) {
+
+            // then
+            assertEquals(HttpStatus.NOT_FOUND, ex.getResponseStatus());
+            assertEquals(1, ex.getErrors().size());
+            MyError actualError = ex.getErrors().iterator().next();
+            assertEquals(expectedError, actualError);
+        }
     }
 
 }

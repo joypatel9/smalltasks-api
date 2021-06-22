@@ -63,7 +63,6 @@ public class MyControllerAdvice {
     public Set<MyError> handleException(ObjectOptimisticLockingFailureException ex) {
 
         log.info("ObjectOptimisticLockingFailureException: {}", ex.getMessage());
-        return Set.of(MyError.of(null, "optimisticLockFailure",
-                utils.getMessage("optimisticLockFailure")));
+        return Set.of(utils.getError(null, "optimisticLockFailure"));
     }
 }

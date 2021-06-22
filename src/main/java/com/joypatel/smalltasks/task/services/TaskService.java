@@ -1,11 +1,14 @@
 package com.joypatel.smalltasks.task.services;
 
+import com.joypatel.smalltasks.common.BusinessException;
+import com.joypatel.smalltasks.common.MyUtils;
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
 import com.joypatel.smalltasks.task.entities.Task;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
 import com.joypatel.smalltasks.user.entities.User;
 import com.joypatel.smalltasks.user.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final UserService userService;
+    private final MyUtils utils;
 
     public TaskResponse toResponse(Task task) {
 
@@ -51,5 +55,13 @@ public class TaskService {
             return taskRepository.findNextTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
         else
             return taskRepository.findPreviousTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
+    }
+
+    public Task getTaskById(Integer taskId) {
+        return taskRepository.findById(taskId).orElseThrow(() ->
+                BusinessException.builder()
+                        .responseStatus(HttpStatus.NOT_FOUND)
+                        .error(utils.getError("task", "notFound"))
+                        .build());
     }
 }

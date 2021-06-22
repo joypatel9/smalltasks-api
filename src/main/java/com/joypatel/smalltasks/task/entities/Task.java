@@ -43,7 +43,11 @@ public class Task extends AbstractEntity<Integer> {
         return Task.Status.OPEN.equals(status);
     }
 
+    public boolean isClosed() {
+        return Status.CLOSED.equals(status);
+    }
+
     public enum Status {
-        OPEN, ASSIGNED, FINISHED
+        OPEN, ASSIGNED, CLOSED
     }
 }
