@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class TaskClosureController {
 
-    TaskClosureService taskClosureService;
+    private final TaskClosureService taskClosureService;
 
     @PostMapping("/{taskId}/closure")
     public void assignTask(@PathVariable Integer taskId) {

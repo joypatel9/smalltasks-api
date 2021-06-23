@@ -54,7 +54,7 @@ class TaskRetrievalServiceTest {
         when(taskService.findOpenTasks(user.getPincode(), user, beyondId, next, itemCount)).thenReturn(tasks);
 
         // when
-        List<TaskResponse> actualResponses = service.getTasks(optionalPincode, beyondId, next, itemCount);
+        List<TaskResponse> actualResponses = service.getTasks(optionalPincode, Optional.empty(), Optional.empty(), Optional.empty(), beyondId, next, itemCount);
 
         // then
         assertEquals(expectedResponses, actualResponses);
@@ -68,7 +68,7 @@ class TaskRetrievalServiceTest {
         when(taskService.findOpenTasks(taskOriginPincode, user, beyondId, next, itemCount)).thenReturn(tasks);
 
         // when
-        List<TaskResponse> actualResponses = service.getTasks(Optional.of(taskOriginPincode), beyondId, next, itemCount);
+        List<TaskResponse> actualResponses = service.getTasks(Optional.of(taskOriginPincode), Optional.empty(), Optional.empty(), Optional.empty(), beyondId, next, itemCount);
 
         // then
         assertEquals(expectedResponses, actualResponses);
