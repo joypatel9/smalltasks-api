@@ -1,39 +1,56 @@
 package com.joypatel.smalltasks.task.services;
 
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
+import com.joypatel.smalltasks.task.entities.QTask;
 import com.joypatel.smalltasks.task.entities.Task;
-import com.joypatel.smalltasks.user.entities.User;
-import com.joypatel.smalltasks.user.services.UserCatalogService;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
 class TaskRetrievalServiceTest {
 
     final int beyondId = 1;
-    final boolean next = false;
     final int itemCount = 2;
-    final Optional<Integer> optionalPincode = Optional.empty();
-    final User user = new User();
+
+    final Integer pincode = 751024;
+    final Integer creatorId = 1290;
+    final Integer executorId = 3422;
+    final Task.Status status = Task.Status.OPEN;
+
+    private final Page<Task> page = mock(Page.class);
 
     private final List<TaskResponse> expectedResponses = List.of(TaskResponse.builder().build());
-    private final List<Task> tasks = List.of(new Task());
+    private final List<Task> taskList = List.of(new Task());
+
+    @Captor
+    private ArgumentCaptor<Predicate> criteriaCaptor;
 
     @Mock
     private TaskService taskService;
 
     @Mock
-    private UserCatalogService userCatalogService;
+    private TaskRepository taskRepository;
 
     @InjectMocks
     private TaskRetrievalService service;
@@ -41,36 +58,54 @@ class TaskRetrievalServiceTest {
     @BeforeEach
     void setUp() {
 
-        user.setPincode(751024);
-
-        when(userCatalogService.getCurrentUser()).thenReturn(user);
-        when(taskService.toResponseList(tasks)).thenReturn(expectedResponses);
+        when(taskRepository.findAll(any(Predicate.class), any(PageRequest.class))).thenReturn(page);
+        when(page.toList()).thenReturn(taskList);
+        when(taskService.toResponseList(taskList)).thenReturn(expectedResponses);
     }
 
     @Test
-    void get_tasks_without_pincode() {
-
-        // given
-        when(taskService.findOpenTasks(user.getPincode(), user, beyondId, next, itemCount)).thenReturn(tasks);
+    void getTasks() {
 
         // when
-        List<TaskResponse> actualResponses = service.getTasks(optionalPincode, Optional.empty(), Optional.empty(), Optional.empty(), beyondId, next, itemCount);
+        Pageable pageable = PageRequest.of(0, itemCount, DESC, "id");
+        List<TaskResponse> actualResponses = service.getTasks(Optional.of(pincode),
+                Optional.of(creatorId), Optional.of(executorId), Optional.of(status),
+                beyondId, false, itemCount);
 
         // then
+        verify(taskRepository).findAll(criteriaCaptor.capture(), eq(pageable));
+
+        QTask task = QTask.task;
+        assertEquals(new BooleanBuilder()
+                        .and(task.originPincode.eq(pincode))
+                        .and(task.creator.id.eq(creatorId))
+                        .and(task.executor.id.eq(executorId))
+                        .and(task.status.eq(status))
+                        .and(task.id.lt(beyondId)),
+                criteriaCaptor.getValue());
+
         assertEquals(expectedResponses, actualResponses);
     }
 
     @Test
-    void get_tasks_with_pincode() {
-
-        // given
-        Integer taskOriginPincode = 751023;
-        when(taskService.findOpenTasks(taskOriginPincode, user, beyondId, next, itemCount)).thenReturn(tasks);
+    void getTasks_When_pincodeAndCreatorAreGiven() {
 
         // when
-        List<TaskResponse> actualResponses = service.getTasks(Optional.of(taskOriginPincode), Optional.empty(), Optional.empty(), Optional.empty(), beyondId, next, itemCount);
+        Pageable pageable = PageRequest.of(0, itemCount, ASC, "id");
+        List<TaskResponse> actualResponses = service.getTasks(Optional.of(pincode),
+                Optional.of(creatorId), Optional.empty(), Optional.empty(),
+                beyondId, true, itemCount);
 
         // then
+        verify(taskRepository).findAll(criteriaCaptor.capture(), eq(pageable));
+
+        QTask task = QTask.task;
+        assertEquals(new BooleanBuilder()
+                        .and(task.originPincode.eq(pincode))
+                        .and(task.creator.id.eq(creatorId))
+                        .and(task.id.gt(beyondId)),
+                criteriaCaptor.getValue());
+
         assertEquals(expectedResponses, actualResponses);
     }
 }

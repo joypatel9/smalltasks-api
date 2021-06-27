@@ -3,7 +3,6 @@ package com.joypatel.smalltasks.task.services;
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
 import com.joypatel.smalltasks.task.entities.QTask;
 import com.joypatel.smalltasks.task.entities.Task;
-import com.joypatel.smalltasks.user.services.UserCatalogService;
 import com.querydsl.core.BooleanBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,6 @@ public class TaskRetrievalService {
 
     private final TaskRepository taskRepository;
     private final TaskService taskService;
-    private final UserCatalogService userCatalogService;
 
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
@@ -40,6 +38,7 @@ public class TaskRetrievalService {
 
         QTask task = QTask.task;
         BooleanBuilder criteria = new BooleanBuilder();
+
         optionalPincode.ifPresent(pincode -> criteria.and(task.originPincode.eq(pincode)));
         optionalCreatorId.ifPresent(creatorId -> criteria.and(task.creator.id.eq(creatorId)));
         optionalExecutorId.ifPresent(executorId -> criteria.and(task.executor.id.eq(executorId)));
@@ -47,6 +46,7 @@ public class TaskRetrievalService {
 
         criteria.and(next ? task.id.gt(beyondId) : task.id.lt(beyondId));
         Pageable pageable = PageRequest.of(0, itemCount, next ? ASC : DESC, "id");
+
         List<Task> tasks = taskRepository.findAll(criteria, pageable).toList();
         List<TaskResponse> taskResponses = taskService.toResponseList(tasks);
 
