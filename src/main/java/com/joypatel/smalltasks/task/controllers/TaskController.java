@@ -2,6 +2,7 @@ package com.joypatel.smalltasks.task.controllers;
 
 import com.joypatel.smalltasks.task.dtos.TaskCreationForm;
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
+import com.joypatel.smalltasks.task.entities.Task;
 import com.joypatel.smalltasks.task.services.TaskCreationService;
 import com.joypatel.smalltasks.task.services.TaskRetrievalService;
 import lombok.AllArgsConstructor;
@@ -28,10 +29,13 @@ public class TaskController {
     @GetMapping
     public List<TaskResponse> retrieveTasks(
             @RequestParam Optional<Integer> pincode,
+            @RequestParam Optional<Integer> creatorId,
+            @RequestParam Optional<Integer> executorId,
+            @RequestParam Optional<Task.Status> status,
             @RequestParam(defaultValue = "0") Integer beyondId,
             @RequestParam(defaultValue = "10") Integer itemCount,
             @RequestParam(defaultValue = "true") Boolean next) {
 
-        return taskRetrievalService.getTasks(pincode, beyondId, next, itemCount);
+        return taskRetrievalService.getTasks(pincode, creatorId, executorId, status, beyondId, next, itemCount);
     }
 }

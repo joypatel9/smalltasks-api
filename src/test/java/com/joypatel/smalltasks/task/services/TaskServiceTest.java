@@ -21,7 +21,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,34 +86,6 @@ class TaskServiceTest {
     }
 
     @Test
-    void should_findOpenTasks_When_Next() {
-
-        // given
-        User user = new User();
-        user.setId(124);
-
-        // when
-        List<Task> tasks = taskService.findOpenTasks(721023, user, 5, true, 5);
-
-        // then
-        verify(taskRepository).findNextTasks(721023, user.getId(), 5, Task.Status.OPEN.name(), 5);
-    }
-
-    @Test
-    void should_findOpenTasks_When_Previous() {
-
-        // given
-        User user = new User();
-        user.setId(124);
-
-        // when
-        List<Task> tasks = taskService.findOpenTasks(721023, user, 5, false, 5);
-
-        // then
-        verify(taskRepository).findPreviousTasks(721023, user.getId(), 5, Task.Status.OPEN.name(), 5);
-    }
-
-    @Test
     void TaskService_getTaskById_Should_return_task() {
 
         // given
@@ -142,6 +113,7 @@ class TaskServiceTest {
         when(utils.getError("task", "notFound")).thenReturn(expectedError);
 
         try {
+
             // when
             taskService.getTaskById(nonExistingTaskId);
             fail();

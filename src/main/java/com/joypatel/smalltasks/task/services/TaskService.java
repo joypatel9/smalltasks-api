@@ -5,7 +5,6 @@ import com.joypatel.smalltasks.common.MyUtils;
 import com.joypatel.smalltasks.task.dtos.TaskResponse;
 import com.joypatel.smalltasks.task.entities.Task;
 import com.joypatel.smalltasks.user.dtos.UserResponse;
-import com.joypatel.smalltasks.user.entities.User;
 import com.joypatel.smalltasks.user.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,14 +46,6 @@ public class TaskService {
         return tasks.stream()
                 .map(this::toResponse)
                 .collect(toList());
-    }
-
-    public List<Task> findOpenTasks(Integer pincode, User currentUser, int beyondId, boolean next, int itemCount) {
-
-        if (next)
-            return taskRepository.findNextTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
-        else
-            return taskRepository.findPreviousTasks(pincode, currentUser.getId(), beyondId, Task.Status.OPEN.name(), itemCount);
     }
 
     public Task getTaskById(Integer taskId) {
